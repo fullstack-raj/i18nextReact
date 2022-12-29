@@ -1,0 +1,74 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+// interface Translation {
+//     key: string;
+//     value: string;
+// }
+
+// interface TranslationsResponse {
+//     translations: Translation[];
+// }
+
+
+export async function fetchTranslations(language: string): Promise<{ [key: string]: string }> {
+    try {
+        //   const response = await axios.get<TranslationsResponse>(`/api/translations?language=${language}`);      
+        //   const translationsResults = response.data;
+        /* eslint-disable */
+        console.log(`fetchTranslations for ${language}`);
+        const translationsResults =
+        {
+            "directive": "React Directive - ng-i18next",
+            "filter": "React Directive - ng-i18next",
+            "basicUsage": "Basic Usage",
+            "ngRepeat": "translate using ng-repeat",
+            "passingOptions": "passing options",
+            "passingOptionsHTMLDescription": "You can also pass options use HTML at the same time by using [html:i18next]",
+            "lngTest": "I'm in English",
+            "lngTestHTML": "<strong>I'm in English</strong>",
+            "passingOptionsPlural": "plural",
+            "passingOptionsPluralDynamic": "plural - dynamic",
+            "sprintf": "The first 4 letters of the english alphabet are: %s, %s, %s and %s"
+        };
+
+        const translationsMap: { [key: string]: string } = {};
+        /* eslint-disable */
+        for (const [key, value] of Object.entries(translationsResults)) {
+            translationsMap[key] = value;
+        }
+        
+        return translationsMap;
+    } catch (error) {
+        /* eslint-disable */
+        console.error(error);
+        throw error;
+    }
+}
+
+
+i18n
+    .use(initReactI18next) // passes i18n down to react-i18next
+    .init({
+        fallbackLng: 'en',
+        debug: true,
+        interpolation: {
+            escapeValue: false, // not needed for react as it escapes by default
+        },
+        resources: {
+            en: {
+                translations: {}, // will be populated with translations from the API
+            },
+        },
+    });
+
+const loadTranslations = async (lng: string) => {
+    // const response = await axios.get(`/api/translations/${lng}`);
+    // const translations = response.data;
+    const translations = await fetchTranslations(lng);
+    i18n.addResourceBundle(lng, 'translations', translations, true, true);
+};
+
+
+
+export { i18n, loadTranslations };
